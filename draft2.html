@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sarah Work App</title>
+	<!--
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+
+	<style type="text/css">
+		.copiedText {
+			color: blue;
+		}
+
+		.section {
+			border: 1px solid black;
+			padding: 10px;
+			margin: 10px;
+			border-radius: 10px;
+			background: rgba(218,218,218,.1);
+			overflow: hidden;
+			box-shadow: 2px 2px 2px #888888;
+		}
+
+		h1 {
+			font-family: 'Lobster', cursive;
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		body {
+			background: goldenrod;
+		}
+
+		.main-content {
+			margin: 10px 30px 10px 30px;
+			padding: 10px;
+			background: white;
+			border-radius: 10px;
+			border: 2px solid blue;
+			box-shadow: 10px 10px 8px #888888;
+		}
+
+		.btn {
+			margin-top: 5px;
+		}
+
+		.submitButton {
+			float: right;
+		}
+	</style>
+
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="main-content">
+		<h1>Automate the Therapy Notes App</h1>
+		<div class="sessionFocusContent section">
+			<h4>Session Focus Content:</h4>
+			<div class="section">
+				<label for="sessionFocus">Symptoms/Challenges Since Last Session &amp; Overall Focus:<br>Session was focused on...</label>
+				<input type="text" class="form-control" name="sessionFocus" id="sessionFocus">
+			</div>
+			<div class="clientCycle section">
+				<label for="clientReport">Client reported...</label>
+				<input type="text" name="clientReport" class="form-control clientReport">
+				<label for="details">Details: </label>
+				<input type="text" name="details" class="form-control details">
+				<label for="clientAndTherapistExplored">Client and therapist explored... </label>
+				<input type="text" name="clientAndTherapistExplored" class="clientAndTherapistExplored form-control">
+				<button class="addRow btn btn-success" onClick="addRow(event)">Add Row</button>
+				<button class="deleteRow btn btn-danger" onClick="deleteRow(event)">Delete Row</button>
+			</div>
+			<button id="sessionFocusComplete" class="btn btn-primary submitButton" onClick="sendSessionFocus()">Session Focus Complete</button>
+		</div>
+		<br>
+		<div class="therapeuticInterventionContent section">
+			<h4>Therapeutic Intervention Content:</h4>
+			<label for="evidenceOfProgress">Progress Towards Goals:<br>Client has made progress as evidenced by...</label>
+			<input type="text" name="evidenceOfProgress" id="evidenceOfProgress" class="form-control"><br>
+			<label for=clientAndTherapistExplored>Client and therapist explored/discussed/... (seperate different topics with by pressing ENTER)</label><br>
+			<textarea class="form-control" rows="4" id="therapeuticInterventionText"></textarea><br>
+			<button id="therapeuticInterventionComplete" onClick="sendTherapeuticIntervention()" class="btn btn-primary submitButton">Therapeutic Intervention Complete</button>
+		</div>
+	</div>
+	</div>
+
+	<script type="text/javascript">
+		const deleteRowButtons = document.querySelectorAll('.sessionFocusContent button.addRow');
+		const sessionFocusContent = document.querySelector('.sessionFocusContent');
+
+		function addRow(event) {
+			document.querySelector('#sessionFocusComplete').remove()
+			let newRow = document.createElement('div');
+			newRow.classList += 'clientCycle';
+			newRow.classList += ' section';
+			newRow.innerHTML = '<label for="clientReport">Client reported... </label>\
+					<input type="text" name="clientReport" class="clientReport form-control">\
+					<label for="details">Details: </label>\
+					<input type="text" name="details" class="details form-control">\
+					<label for="clientAndTherapistExplored">Client and therapist explored... </label>\
+					<input type="text" name="clientAndTherapistExplored" class="clientAndTherapistExplored form-control">\
+					<button class="addRow btn btn-success" onClick="addRow()">Add Row</button>\
+					<button class="deleteRow btn btn-danger" onClick="deleteRow(event)">Delete Row</button>\
+					<br>'
+			sessionFocusContent.append(newRow);
+			sessionFocusContent.lastChild.querySelector('input').focus();
+			if (!document.querySelector('#sessionFocusComplete')) {
+				let newButton = document.createElement('button')
+				newButton.classList += 'btn btn-primary submitButton';
+				newButton.id = 'sessionFocusComplete';
+				newButton.setAttribute('onClick', 'sendSessionFocus()');
+				newButton.innerHTML = 'Session Focus Complete';
+				sessionFocusContent.append(newButton);
+			}
+			// Make it so that clicking addrow automatically focuses on the first input box of the new row.
+		}
+
+		function deleteRow(event) {
+			console.log(event.srcElement.parentElement);
+			event.srcElement.parentElement.remove();
+			if (!document.querySelector('#sessionFocusComplete')) {
+				let newButton = document.createElement('button')
+				newButton.classList += 'btn btn-primary submitButton';
+				newButton.id = 'sessionFocusComplete';
+				newButton.setAttribute('onClick', 'sendSessionFocus()');
+				newButton.innerHTML = 'Session Focus Complete';
+				sessionFocusContent.append(newButton);
+			}
+			//this.parentElement('.clientCycle').style.fontSize = 10;
+		}
+
+		function sendSessionFocus() {
+			const sessionFocus = document.querySelector('#sessionFocus').value;
+			let text = [];
+			text.push('Symptoms/Challenges Since Last Session & Overall Focus:');
+			// if  {
+			// 	text.push(`Session was focused on ${sessionFocus}`);
+			// }
+			// else {
+			// 	text.push(`Session was focused on ${sessionFocus}.`);
+			// }
+
+			text.push(`Session was focused on ${sessionFocus}` + ((sessionFocus.slice(-1) == '.') ? '' : '.'));
+
+			let clientCycles = document.querySelectorAll('.clientCycle');
+			clientCycles.forEach(function(clientCycle) {
+				let clientReport = clientCycle.querySelector('.clientReport').value;
+				let details = clientCycle.querySelector('.details').value;
+				let clientAndTherapistExplored = clientCycle.querySelector('.clientAndTherapistExplored').value;
+				text.push(`Client reported ${clientReport}` + ((clientReport.slice(-1) == '.') ? '' : '.'));
+				if (details) {
+					text.push(`Details: ` + details);
+				}
+				text.push(`Client and therapist explored ${clientAndTherapistExplored}` + ((clientAndTherapistExplored.slice(-1) == '.') ? '' : '.'));
+			})
+
+			text = text.join(' ');
+			let tempInput = document.createElement('input');
+			tempInput.value = text;
+			sessionFocusContent.append(tempInput);
+			tempInput.select();
+			document.execCommand('copy');
+			tempInput.remove();
+			if (sessionFocusContent.querySelector('p')) {
+				sessionFocusContent.querySelector('p').remove();
+			}
+			let newParagraph = document.createElement('p');
+			newParagraph.innerHTML = `Copied to clipboard: <span class="copiedText">${text}</span>`
+			sessionFocusContent.append(newParagraph);
+			console.log(text);
+		}
+
+		function sendTherapeuticIntervention() {
+			const evidenceOfProgress = document.querySelector('#evidenceOfProgress').value;
+			let text = [];
+			text.push('Progress Towards Goals:');
+			text.push(`Client has made progress as evidenced by ${evidenceOfProgress}` + ((evidenceOfProgress.slice(-1) == '.') ? '' : '.'));
+			text.push('Interventions Implemented: Therapist reviewed client\'s mood, symptoms, and experiences since last session. Therapist created a safe and supportive space for client to openly express herself. Therapist validated client\'s feelings to continue to establish rapport and strengthen the therapeutic alliance. Therapist provided unconditional positive regard in support of counseling.')
+
+			const therapeuticInterventionContent = document.querySelector('.therapeuticInterventionContent')
+			const therapeuticInterventionText = document.querySelector('#therapeuticInterventionText').value.split('\n');
+
+			// Add in verb selector here
+			let verbList = ['explored','discussed','examined', 'addressed','consulted about','analyzed','reviewed'];
+
+			for (let intervention of therapeuticInterventionText) {
+				if (intervention) {
+					let verb = verbList[Math.floor(Math.random()*verbList.length)];
+					text.push(`Client and therapist ${verb} ${intervention.toLowerCase()}.`);
+				}
+			}
+			text.push('During the session, therapist encouraged client\'s autonomy and self determination.');
+			text = text.join(' ');
+			let tempInput = document.createElement('input');
+			tempInput.value = text;
+			therapeuticInterventionContent.append(tempInput);
+			tempInput.select();
+			document.execCommand('copy');
+			tempInput.remove();
+			if (therapeuticInterventionContent.querySelector('p')) {
+				therapeuticInterventionContent.querySelector('p').remove();
+			}
+			let newParagraph = document.createElement('p');
+			newParagraph.innerHTML = `Copied to clipboard: <span class="copiedText">${text}</span>`
+			therapeuticInterventionContent.append(newParagraph);
+		}
+
+	</script>
+</body>
+</html>
