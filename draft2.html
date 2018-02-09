@@ -2,11 +2,13 @@
 <html>
 <head>
 	<title>Sarah Work App</title>
-	<!--
+	
 	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
-	-->
+	<!--
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	-->
 	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<style type="text/css">
 		.copiedText {
@@ -24,7 +26,7 @@
 		}
 
 		h1 {
-			font-family: 'Lobster', cursive;
+			font-family: 'Lobster', 'Edwardian Script ITC' ,cursive;
 			text-align: center;
 			margin-bottom: 30px;
 		}
@@ -56,7 +58,14 @@
 <body>
 	<div class="container-fluid">
 		<div class="main-content">
-		<h1>Automate the Therapy Notes App</h1>
+		<h1>Therapy Notes App</h1>
+		<div class="sessionFocusContent section">
+			<h4>Basic Info:</h4>
+			<div class="section">
+				<label for="gender">For male/female, type m/f:</label>
+				<input type="text" class="form-control" name="gender" id="gender">
+			</div>
+		</div>
 		<div class="sessionFocusContent section">
 			<h4>Session Focus Content:</h4>
 			<div class="section">
@@ -174,11 +183,14 @@
 		}
 
 		function sendTherapeuticIntervention() {
+			const gender = document.querySelector('#gender').value[0].toUpperCase();
+			const genderSelf = (gender == 'M') ? 'himself' : 'herself';
+
 			const evidenceOfProgress = document.querySelector('#evidenceOfProgress').value;
 			let text = [];
 			text.push('Progress Towards Goals:');
 			text.push(`Client has made progress as evidenced by ${evidenceOfProgress}` + ((evidenceOfProgress.slice(-1) == '.') ? '' : '.'));
-			text.push('Interventions Implemented: Therapist reviewed client\'s mood, symptoms, and experiences since last session. Therapist created a safe and supportive space for client to openly express herself. Therapist validated client\'s feelings to continue to establish rapport and strengthen the therapeutic alliance. Therapist provided unconditional positive regard in support of counseling.')
+			text.push(`Interventions Implemented: Therapist reviewed client\'s mood, symptoms, and experiences since last session. Therapist created a safe and supportive space for client to openly express ${genderSelf}. Therapist validated client\'s feelings to continue to establish rapport and strengthen the therapeutic alliance. Therapist provided unconditional positive regard in support of counseling.`)
 
 			const therapeuticInterventionContent = document.querySelector('.therapeuticInterventionContent')
 			const therapeuticInterventionText = document.querySelector('#therapeuticInterventionText').value.split('\n');
