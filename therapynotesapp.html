@@ -59,7 +59,7 @@
 	<div class="container-fluid">
 		<div class="main-content">
 		<h1>Therapy Notes App</h1>
-		<div class="sessionFocusContent section">
+		<div class="section">
 			<h4>Basic Info:</h4>
 			<div class="section">
 				<label for="gender">For male/female, type m/f:</label>
@@ -201,7 +201,7 @@
 			for (let intervention of therapeuticInterventionText) {
 				if (intervention) {
 					let verb = verbList[Math.floor(Math.random()*verbList.length)];
-					text.push(`Client and therapist ${verb} ${intervention.toLowerCase()}.`);
+					text.push(`Client and therapist ${verb} ${intervention.toLowerCase()}` + ((intervention.slice(-1) == '.') ? '' : '.'));
 				}
 			}
 			text.push('During the session, therapist encouraged client\'s autonomy and self determination.');
